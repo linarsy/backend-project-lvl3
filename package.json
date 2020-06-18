@@ -1,0 +1,37 @@
+{
+  "name": "@linarsy/page-loader",
+  "version": "0.0.1",
+  "description": "Учебный проект в профессии Бэкенд JavaScript на Hexlet",
+  "bin": {
+    "linarsy": "bin/page-loader.js"
+  },
+  "engines": {
+    "node": ">=14"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "test": "npx -n --experimental-vm-modules jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/linarsy/backend-project-lvl3.git"
+  },
+  "author": "Ala Yakushava",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/linarsy/backend-project-lvl3/issues"
+  },
+  "type": "module",
+  "jest": {
+    "testEnvironment": "node",
+    "transform": {}
+  },
+  "homepage": "https://github.com/linarsy/backend-project-lvl3#readme",
+  "devDependencies": {
+    "eslint": "^7.2.0",
+    "eslint-config-airbnb-base": "^14.2.0",
+    "eslint-plugin-import": "^2.21.2",
+    "eslint-plugin-jest": "^23.13.2",
+    "jest": "^26.0.1"
+  }
+}
