@@ -1,5 +1,4 @@
 #!/usr/bin/env node
+import program from '../program.js';
 
-import pageLoader from '../index.js';
-
-pageLoader();
+program();
