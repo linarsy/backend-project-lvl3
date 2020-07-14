@@ -1,34 +1,35 @@
 import axios from 'axios';
 import fs from 'fs/promises';
-import path from 'path';
 
-const normilizeFileName = (name) => {
-  const regex = /[^a-zA-Z0-9]/gi;
-  return name.replace(regex, '-');
-};
+import parseHTML from './parser.js';
+import { createPagePath, createResourcePath } from './utils.js';
 
-const createFilePath = (url, dir) => {
-  const { host, pathname } = new URL(url);
-  const fileName = `${normilizeFileName(host)}${normilizeFileName(pathname)}.html`;
-  const dirName = path.resolve(dir);
-  return path.join(dirName, fileName);
-};
+const loadPage = (url, outputDir) => {
+  const dirpath = createPagePath(url, outputDir, '_files');
+  const filepath = createPagePath(url, outputDir, '.html');
 
-const loadPage = (url, dir) => {
-  const filePath = createFilePath(url, dir);
+  fs.stat(dirpath)
+    .then(() => console.error('такая папка уже есть'))
+    .catch(() => fs.mkdir(dirpath));
 
-  axios.get(url)
+  const promise = axios.get(url)
     .then(({ data }) => {
-      fs.writeFile(filePath, data);
-    })
-    .then(() => {
-      console.log('success');
-      console.log(filePath);
+      const { html, hrefs } = parseHTML(data, url, dirpath);
+      fs.writeFile(filepath, html);
+      const promises = hrefs.map(axios.get);
+      return Promise.all(promises);
     })
     .catch((e) => {
       console.error(e);
       throw e;
     });
+
+  promise.then((contents) => {
+    contents.map(({ config, data }) => {
+      const resoursePath = createResourcePath(config.url, dirpath);
+      return fs.writeFile(resoursePath, data);
+    });
+  });
 };
 
 export default loadPage;
